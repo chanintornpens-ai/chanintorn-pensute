@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/* ────────────────────────────────────────────────────────────
+   ธีม: d.school-inspired — บล็อกสีแบน ขอบดำหนา เงาแข็ง ตัวหนา
+   ──────────────────────────────────────────────────────────── */
+@theme {
+  /* ฟอนต์ชุดเดียวกับ Life Tracker */
+  --font-sans: var(--font-jakarta), var(--font-thai), system-ui, sans-serif;
+  --font-display: var(--font-jakarta), var(--font-thai), system-ui, sans-serif;
+
+  /* จานสีแบน สดจัด */
+  --color-paper: #faf7f0;
+  --color-ink: #16130f;
+  --color-red: #ff4438;
+  --color-yellow: #ffc400;
+  --color-teal: #00b3a4;
+  --color-blue: #1d4ed8;
+  --color-purple: #8b5cf6;
+  --color-pink: #ff5da2;
+  --color-lime: #b5e04a;
+
+  /* animation */
+  --animate-marquee: marquee 26s linear infinite;
+  --animate-float: float 5s ease-in-out infinite;
+  --animate-wiggle: wiggle 2.6s ease-in-out infinite;
+  --animate-spin-slow: spin 14s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
+  50% { transform: translateY(-12px) rotate(var(--r, 0deg)); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(6deg); }
+}
+
+/* ────────────────────────────────────────────────────────────
+   Base
+   ──────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ขอบดำหนา + เงาแข็งแบบ d.school/นีโอบรูทัล */
+.edge {
+  border: 3px solid var(--color-ink);
+}
+.hard {
+  box-shadow: 6px 6px 0 0 var(--color-ink);
+}
+.hard-lg {
+  box-shadow: 10px 10px 0 0 var(--color-ink);
+}
+.hard-hover {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.hard-hover:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 0 var(--color-ink);
+}
+
+/* ปากกาเน้นข้อความ (marker) — บล็อกสีเอียงนิด ๆ หลังคำ */
+.marker {
+  position: relative;
+  display: inline-block;
+  padding: 0 0.12em;
+  white-space: pre;
+}
+.marker::before {
+  content: "";
+  position: absolute;
+  inset: 12% -0.05em 8%;
+  background: var(--mark, var(--color-yellow));
+  transform: rotate(-1.4deg);
+  z-index: -1;
+  border-radius: 3px;
+}
+
+/* เส้นกริดจาง ๆ เป็นพื้นหลัง */
+.grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(22, 19, 15, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(22, 19, 15, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* เผยตัวตอนเลื่อน (ใช้กับ <Reveal/>) */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+  html { scroll-behavior: auto; }
+}
