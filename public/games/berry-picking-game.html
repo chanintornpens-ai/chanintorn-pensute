@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wild Berry Season — a debt-trap simulation</title>
+<!-- tabler icons: inlined offline (14 glyphs, CSS mask) -->
+<style>
+.ti{display:inline-block;width:1em;height:1em;vertical-align:-.125em;background-color:currentColor;-webkit-mask:var(--ti) center/contain no-repeat;mask:var(--ti) center/contain no-repeat}
+.ti-alert-triangle{--ti:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%209v4%22%20%2F%3E%20%3Cpath%20d%3D%22M10.363%203.591l-8.106%2013.534a1.914%201.914%200%200%200%201.636%202.871h16.214a1.914%201.914%200%200%200%201.636%20-2.87l-8.106%20-13.536a1.914%201.914%200%200%200%20-3.274%200z%22%20%2F%3E%20%3Cpath%20d%3D%22M12%2016h.01%22%20%2F%3E%3C%2Fsvg%3E")}
+.ti-arrow-right{--ti:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2012l14%200%22%20%2F%3E%20%3Cpath%20d%3D%22M13%2018l6%20-6%22%20%2F%3E%20%3Cpath%20d%3D%22M13%206l6%206%22%20%2F%3E%3C%2Fsvg%3E")}
+.ti-check{--ti:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2012l5%205l10%20-10%22%20%2F%3E%3C%2Fsvg%3E")}
+.ti-clock{--ti:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2012a9%209%200%201%200%2018%200a9%209%200%200%200%20-18%200%22%20%2F%3E%20%3Cpath%20d%3D%22M12%207v5l3%203%22%20%2F%3E%3C%2Fsvg%3E")}
+.ti-cloud{--ti:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6.657%2018c-2.572%200%20-4.657%20-2.007%20-4.657%20-4.483c0%20-2.475%202.085%20-4.482%204.657%20-4.482c.393%20-1.762%201.794%20-3.2%203.675%20-3.773c1.88%20-.572%203.956%20-.193%205.444%201c1.488%201.19%202.162%203.007%201.77%204.769h.99c1.913%200%203.464%201.56%203.464%203.486c0%201.927%20-1.551%203.487%20-3.465%203.487h-11.878%22%20%2F%3E%3C%2Fsvg%3E")}
+.ti-coin{--ti:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2012m-9%200a9%209%200%201%200%2018%200a9%209%200%201%200%20-18%200%22%20%2F%3E%20%3Cpath%20d%3D%22M14.8%209a2%202%200%200%200%20-1.8%20-1h-2a2%202%200%201%200%200%204h2a2%202%200%201%201%200%204h-2a2%202%200%200%201%20-1.8%20-1%22%20%2F%3E%20%3Cpath%20d%3D%22M12%207v10%22%20%2F%3E%3C%2Fsvg%3E")}
+.ti-flag{--ti:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%205a5%205%200%200%201%207%200a5%205%200%200%200%207%200v9a5%205%200%200%201%20-7%200a5%205%200%200%200%20-7%200v-9z%22%20%2F%3E%20%3Cpath%20d%3D%22M5%2021v-7%22%20%2F%3E%3C%2Fsvg%3E")}
+.ti-info-circle{--ti:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2012a9%209%200%201%200%2018%200a9%209%200%200%200%20-18%200%22%20%2F%3E%20%3Cpath%20d%3D%22M12%209h.01%22%20%2F%3E%20%3Cpath%20d%3D%22M11%2012h1v4h1%22%20%2F%3E%3C%2Fsvg%3E")}
+.ti-plant-2{--ti:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%209a10%2010%200%201%200%2020%200%22%20%2F%3E%20%3Cpath%20d%3D%22M12%2019a10%2010%200%200%201%2010%20-10%22%20%2F%3E%20%3Cpath%20d%3D%22M2%209a10%2010%200%200%201%2010%2010%22%20%2F%3E%20%3Cpath%20d%3D%22M12%204a9.7%209.7%200%200%201%202.99%207.5%22%20%2F%3E%20%3Cpath%20d%3D%22M9.01%2011.5a9.7%209.7%200%200%201%202.99%20-7.5%22%20%2F%3E%3C%2Fsvg%3E")}
+.ti-player-play{--ti:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M7%204v16l13%20-8z%22%20%2F%3E%3C%2Fsvg%3E")}
+.ti-refresh{--ti:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M20%2011a8.1%208.1%200%200%200%20-15.5%20-2m-.5%20-4v4h4%22%20%2F%3E%20%3Cpath%20d%3D%22M4%2013a8.1%208.1%200%200%200%2015.5%202m.5%204v-4h-4%22%20%2F%3E%3C%2Fsvg%3E")}
+.ti-mood-neutral{--ti:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2012m-9%200a9%209%200%201%200%2018%200a9%209%200%201%200%20-18%200%22%20%2F%3E%20%3Cpath%20d%3D%22M9%2010l.01%200%22%20%2F%3E%20%3Cpath%20d%3D%22M15%2010l.01%200%22%20%2F%3E%3C%2Fsvg%3E")}
+.ti-mood-sad{--ti:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2012m-9%200a9%209%200%201%200%2018%200a9%209%200%201%200%20-18%200%22%20%2F%3E%20%3Cpath%20d%3D%22M9%2010l.01%200%22%20%2F%3E%20%3Cpath%20d%3D%22M15%2010l.01%200%22%20%2F%3E%20%3Cpath%20d%3D%22M9.5%2015.25a3.5%203.5%200%200%201%205%200%22%20%2F%3E%3C%2Fsvg%3E")}
+.ti-mood-smile{--ti:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2012m-9%200a9%209%200%201%200%2018%200a9%209%200%201%200%20-18%200%22%20%2F%3E%20%3Cpath%20d%3D%22M9%2010l.01%200%22%20%2F%3E%20%3Cpath%20d%3D%22M15%2010l.01%200%22%20%2F%3E%20%3Cpath%20d%3D%22M9.5%2015a3.5%203.5%200%200%200%205%200%22%20%2F%3E%3C%2Fsvg%3E")}
+</style>
+<style>
+  :root{
+    --color-background-page:#f6f5f0;
+    --color-background-primary:#ffffff;
+    --color-background-secondary:#f1efe8;
+    --color-background-danger:#fceaea;
+    --color-background-info:#e6f1fb;
+    --color-text-primary:#1f1f1d;
+    --color-text-secondary:#5f5e5a;
+    --color-text-tertiary:#888780;
+    --color-text-danger:#a32d2d;
+    --color-text-info:#0c447c;
+    --color-text-success:#0f6e56;
+    --color-text-warning:#854f0b;
+    --color-border-tertiary:rgba(44,44,42,0.15);
+    --color-border-secondary:rgba(44,44,42,0.30);
+    --border-radius-md:8px;
+    --border-radius-lg:12px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --color-background-page:#1c1c1a;
+      --color-background-primary:#26262400;
+      --color-background-primary:#2a2a27;
+      --color-background-secondary:#333330;
+      --color-background-danger:#3a1f1f;
+      --color-background-info:#10243a;
+      --color-text-primary:#f1efe8;
+      --color-text-secondary:#b4b2a9;
+      --color-text-tertiary:#888780;
+      --color-text-danger:#f09595;
+      --color-text-info:#85b7eb;
+      --color-text-success:#5dcaa5;
+      --color-text-warning:#fac775;
+      --color-border-tertiary:rgba(241,239,232,0.15);
+      --color-border-secondary:rgba(241,239,232,0.30);
+    }
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:24px 16px;
+    background:var(--color-background-page);
+    color:var(--color-text-primary);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;
+  }
+  .wrap{max-width:680px; margin:0 auto;}
+  h1{font-size:22px; font-weight:500; margin:0 0 4px;}
+  h3{font-size:16px; font-weight:500; margin:0;}
+  .sub{font-size:14px; color:var(--color-text-secondary); margin:0 0 20px;}
+  button{
+    font-family:inherit; background:transparent; color:var(--color-text-primary);
+    border:0.5px solid var(--color-border-secondary); border-radius:var(--border-radius-md);
+    cursor:pointer; transition:transform .05s, background .15s;
+  }
+  button:hover{background:var(--color-background-secondary);}
+  button:active{transform:scale(0.98);}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+  a{color:var(--color-text-info);}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>The wild berry season</h1>
+<p class="sub">A debt-trap simulation based on the true story of Thai migrant workers picking wild berries in Sweden and Finland.</p>
+
+<div id="bp-status" style="display:none; gap:8px; margin-bottom:12px;">
+  <div style="flex:1; background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:8px 10px;">
+    <div style="font-size:12px; color:var(--color-text-secondary);">Week</div>
+    <div style="font-size:18px; font-weight:500;" id="bp-week">0 / 10</div>
+  </div>
+  <div style="flex:1; background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:8px 10px;">
+    <div style="font-size:12px; color:var(--color-text-secondary);">Berries picked</div>
+    <div style="font-size:18px; font-weight:500;" id="bp-kg">0 kg</div>
+  </div>
+  <div style="flex:1; background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:8px 10px;">
+    <div style="font-size:12px; color:var(--color-text-secondary);">Net on site</div>
+    <div style="font-size:18px; font-weight:500;" id="bp-cash">0 ฿</div>
+  </div>
+  <div style="flex:1; background:var(--color-background-danger); border-radius:var(--border-radius-md); padding:8px 10px;">
+    <div style="font-size:12px; color:var(--color-text-danger);">Debt back home</div>
+    <div style="font-size:18px; font-weight:500; color:var(--color-text-danger);" id="bp-debt">140,000 ฿</div>
+  </div>
+</div>
+
+<div id="bp-intro" style="background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:1.25rem 1.4rem;">
+  <div style="font-size:13px; color:var(--color-text-info); margin-bottom:6px;"><i class="ti ti-plant-2" aria-hidden="true"></i> Based on a true story · Thai workers picking wild berries in Sweden/Finland</div>
+  <h3 style="margin:0 0 10px;">The wild berry season</h3>
+  <p style="font-size:15px; line-height:1.7; margin:0 0 12px;">You are a rice farmer from northeast Thailand. A broker promises that two months picking wild berries in Finland will earn you 100,000 baht. So you <strong>take out a bank loan and mortgage your farmland — 140,000 baht of debt</strong> — to cover the broker's fee, airfare, visa and a medical check, before you even leave.</p>
+  <p style="font-size:15px; line-height:1.7; margin:0 0 12px;">Once you reach the forest, the reality is: you are paid <strong>by the kilo</strong>, and the company <strong>deducts food, housing, car rental and fuel</strong> from your pay every week. Your passport is taken. You work 14–15 hours a day, no days off, for 10 weeks straight.</p>
+  <p style="font-size:14px; line-height:1.7; margin:0 0 16px; color:var(--color-text-secondary);">Goal: pick enough berries to <strong>repay the 140,000 baht debt</strong> and bring money home · Click the berry bushes on screen as fast as you can each week.</p>
+  <button id="bp-start" style="font-size:15px; padding:10px 18px;">Start the season <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+</div>
+
+<div id="bp-dayintro" style="display:none; background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:1.25rem 1.4rem;">
+  <div id="bp-dayintro-week" style="font-size:13px; color:var(--color-text-secondary); margin-bottom:6px;"></div>
+  <h3 id="bp-dayintro-title" style="margin:0 0 8px;"></h3>
+  <p id="bp-dayintro-note" style="font-size:15px; line-height:1.7; margin:0 0 14px;"></p>
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
+    <span id="bp-w-price" style="font-size:13px; background:var(--color-background-secondary); padding:5px 10px; border-radius:var(--border-radius-md);"></span>
+    <span id="bp-w-weather" style="font-size:13px; background:var(--color-background-secondary); padding:5px 10px; border-radius:var(--border-radius-md);"></span>
+    <span id="bp-w-extra" style="font-size:13px; background:var(--color-background-secondary); padding:5px 10px; border-radius:var(--border-radius-md);"></span>
+  </div>
+  <button id="bp-go" style="font-size:15px; padding:10px 18px;">Head into the forest <i class="ti ti-player-play" aria-hidden="true"></i></button>
+</div>
+
+<div id="bp-field-wrap" style="display:none;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+    <div style="font-size:14px; font-weight:500;"><i class="ti ti-clock" aria-hidden="true"></i> Time left: <span id="bp-timer">12</span>s</div>
+    <div style="font-size:14px; font-weight:500; color:var(--color-text-info);">This week: <span id="bp-daykg">0</span> kg</div>
+  </div>
+  <div id="bp-field" style="position:relative; width:100%; height:280px; background:var(--color-background-secondary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); overflow:hidden; cursor:crosshair;"></div>
+  <p style="font-size:13px; color:var(--color-text-tertiary); margin:8px 0 0; text-align:center;">Click the berry bushes as fast as you can — the more you pick, the better your chance of clearing the debt</p>
+</div>
+
+<div id="bp-ledger" style="display:none; background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:1.25rem 1.4rem;">
+  <h3 id="bp-ledger-title" style="margin:0 0 12px;">Weekly ledger</h3>
+  <table style="width:100%; font-size:15px; border-collapse:collapse;">
+    <tbody id="bp-ledger-rows"></tbody>
+  </table>
+  <button id="bp-next" style="font-size:15px; padding:10px 18px; margin-top:16px;">Next week <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+</div>
+
+<div id="bp-end" style="display:none;"></div>
+
+<p style="font-size:12px; color:var(--color-text-tertiary); margin-top:24px; line-height:1.6;">An educational simulation. Figures are based on reporting by Prachatai, Yle, The Nation and IOM Finland on the exploitation of Thai wild-berry pickers. Conversion ~1 € ≈ 38 ฿.</p>
+</div>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var fmt = function(n){ return Math.round(n).toLocaleString('en-US'); };
+
+  var DEBT0 = 140000;
+  var BASE_DED = 9000;
+  var BASE_PRICE = 55;
+
+  var DAYS = [
+    {t:"Week 1 · Arrival in the forest", note:"The forest is still rich, but you are not used to the work yet. The employer takes your passport the moment you arrive.", price:55, w:"sun", extra:0, extraLabel:""},
+    {t:"Week 2 · Rain all week", note:"Heavy rain for days and berries are scarce — but food and housing are still deducted at the same rate.", price:55, w:"rain", extra:0, extraLabel:""},
+    {t:"Week 3 · The broker fixes the price", note:"The company forces you to sell only to its chosen middleman, who pushes the buying price down.", price:42, w:"sun", extra:0, extraLabel:""},
+    {t:"Week 4 · The ATV breaks down", note:"The vehicle used to reach the forest breaks. The company deducts the repair cost from your pay — even though it wasn't your fault.", price:55, w:"sun", extra:4000, extraLabel:"Vehicle repair −4,000 ฿"},
+    {t:"Week 5 · This patch is picked out", note:"Other pickers have cleared the area, so you must drive farther every day. Extra fuel is deducted.", price:55, w:"sun", extra:3000, extraLabel:"Extra fuel −3,000 ฿"},
+    {t:"Week 6 · A bumper blueberry year", note:"Lucky break — blueberries are unusually abundant this year and the market price is high. Picking really pays off.", price:72, w:"good", extra:0, extraLabel:""},
+    {t:"Week 7 · Back pain, 15-hour days", note:"Bent over all day with no rest, your back and knees start to fail — but you have to push on.", price:55, w:"sun", extra:0, extraLabel:""},
+    {t:"Week 8 · A storm rolls in", note:"Heavy rain and storms mean few days in the forest, and the berries are bruised and spoiled.", price:55, w:"rain", extra:0, extraLabel:""},
+    {t:"Week 9 · Price ticks up a little", note:"European demand rises and the buying price edges up slightly.", price:62, w:"sun", extra:0, extraLabel:""},
+    {t:"Week 10 · Final week", note:"The season is almost over. Pick as much as you can before you have to fly home.", price:58, w:"sun", extra:0, extraLabel:""}
+  ];
+
+  var st = { day:0, debt:DEBT0, cash:0, totalKg:0, dayKg:0 };
+  var timerInt=null, spawnInt=null, timeLeft=12;
+
+  function updateStatus(){
+    $('bp-week').textContent = Math.min(st.day + 1, 10) + ' / 10';
+    $('bp-kg').textContent = fmt(st.totalKg) + ' kg';
+    $('bp-cash').textContent = fmt(st.cash) + ' ฿';
+    $('bp-debt').textContent = fmt(st.debt) + ' ฿';
+  }
+
+  function show(id){
+    ['bp-intro','bp-dayintro','bp-field-wrap','bp-ledger','bp-end'].forEach(function(x){ $(x).style.display='none'; });
+    $(id).style.display = 'block';
+  }
+
+  $('bp-start').addEventListener('click', function(){
+    $('bp-status').style.display='flex';
+    updateStatus();
+    startDay();
+  });
+
+  function startDay(){
+    var d = DAYS[st.day];
+    updateStatus();
+    $('bp-dayintro-week').textContent = 'Week ' + (st.day+1) + ' of 10';
+    $('bp-dayintro-title').textContent = d.t;
+    $('bp-dayintro-note').textContent = d.note;
+    $('bp-w-price').innerHTML = '<i class="ti ti-coin" aria-hidden="true"></i> Price ' + d.price + ' ฿/kg';
+    var wlabel = d.w==='rain' ? 'Rain, few berries' : (d.w==='good' ? 'Good weather, berries abundant' : 'Normal weather');
+    $('bp-w-weather').innerHTML = '<i class="ti ti-cloud" aria-hidden="true"></i> ' + wlabel;
+    $('bp-w-extra').innerHTML = d.extra>0 ? ('<i class="ti ti-alert-triangle" aria-hidden="true"></i> ' + d.extraLabel) : '<i class="ti ti-check" aria-hidden="true"></i> No extra charges';
+    $('bp-w-extra').style.color = d.extra>0 ? 'var(--color-text-danger)' : 'var(--color-text-secondary)';
+    show('bp-dayintro');
+  }
+
+  $('bp-go').addEventListener('click', function(){ runPicking(); });
+
+  function runPicking(){
+    var d = DAYS[st.day];
+    st.dayKg = 0;
+    $('bp-daykg').textContent = '0';
+    timeLeft = 12;
+    $('bp-timer').textContent = timeLeft;
+    var field = $('bp-field');
+    field.innerHTML = '';
+    show('bp-field-wrap');
+
+    var spawnDelay = d.w==='rain' ? 460 : (d.w==='good' ? 230 : 320);
+    var kgMin = d.w==='rain' ? 3 : 4;
+    var kgMax = d.w==='rain' ? 7 : (d.w==='good' ? 14 : 10);
+
+    spawnInt = setInterval(function(){ spawnBerry(field, kgMin, kgMax, d.w); }, spawnDelay);
+
+    timerInt = setInterval(function(){
+      timeLeft--;
+      $('bp-timer').textContent = timeLeft;
+      if(timeLeft<=0){ endPicking(); }
+    }, 1000);
+  }
+
+  function spawnBerry(field, kgMin, kgMax, w){
+    var b = document.createElement('button');
+    var kg = Math.floor(Math.random()*(kgMax-kgMin+1))+kgMin;
+    var size = 26 + kg*1.6;
+    b.setAttribute('aria-label','Pick berries '+kg+' kilograms');
+    var grad = w==='good' ? 'radial-gradient(circle at 35% 30%, #378ADD, #0C447C)' : 'radial-gradient(circle at 35% 30%, #7F77DD, #3C3489)';
+    b.style.cssText = 'position:absolute; width:'+size+'px; height:'+size+'px; border-radius:50%; border:2px solid rgba(44,44,42,0.2); background:'+grad+'; cursor:pointer; padding:0;';
+    var x = Math.random()*88;
+    var y = Math.random()*78;
+    b.style.left = x+'%';
+    b.style.top = y+'%';
+    var alive = true;
+    b.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(!alive) return;
+      alive=false;
+      st.dayKg += kg;
+      $('bp-daykg').textContent = fmt(st.dayKg);
+      var pop = document.createElement('span');
+      pop.textContent = '+'+kg;
+      pop.style.cssText = 'position:absolute; left:'+x+'%; top:'+y+'%; font-size:14px; font-weight:500; color:var(--color-text-info); pointer-events:none;';
+      field.appendChild(pop);
+      setTimeout(function(){ if(pop.parentNode) pop.parentNode.removeChild(pop); }, 500);
+      if(b.parentNode) b.parentNode.removeChild(b);
+    });
+    field.appendChild(b);
+    setTimeout(function(){ if(alive && b.parentNode){ b.parentNode.removeChild(b);} }, 1500);
+  }
+
+  function endPicking(){
+    clearInterval(timerInt); clearInterval(spawnInt);
+    var d = DAYS[st.day];
+    var gross = st.dayKg * d.price;
+    var ded = BASE_DED + d.extra;
+    var net = gross - ded;
+    st.totalKg += st.dayKg;
+    st.cash += net;
+    updateStatus();
+
+    $('bp-ledger-title').textContent = 'Ledger · ' + d.t.split('·')[0].trim();
+    var rows = '';
+    function row(label, val, color){
+      return '<tr><td style="padding:7px 0; color:var(--color-text-secondary);">'+label+'</td><td style="padding:7px 0; text-align:right; font-weight:500;'+(color?('color:'+color+';'):'')+'">'+val+'</td></tr>';
+    }
+    rows += row('Picked this week', fmt(st.dayKg)+' kg');
+    rows += row('× buying price '+d.price+' ฿/kg', '+ '+fmt(gross)+' ฿', 'var(--color-text-success)');
+    rows += row('Deduct: food, housing, car, fuel', '− '+fmt(BASE_DED)+' ฿', 'var(--color-text-danger)');
+    if(d.extra>0) rows += row('Deduct: '+d.extraLabel.replace(/−.*/,'').trim(), '− '+fmt(d.extra)+' ฿', 'var(--color-text-danger)');
+    rows += '<tr><td colspan="2" style="border-top:0.5px solid var(--color-border-secondary); padding-top:4px;"></td></tr>';
+    rows += row('<strong>Net left this week</strong>', (net>=0?'+ ':'− ')+fmt(Math.abs(net))+' ฿', net>=0?'var(--color-text-success)':'var(--color-text-danger)');
+    rows += row('Cumulative net on site', fmt(st.cash)+' ฿', st.cash>=0?'var(--color-text-primary)':'var(--color-text-danger)');
+    rows += row('Debt still owed back home', fmt(st.debt)+' ฿', 'var(--color-text-danger)');
+    $('bp-ledger-rows').innerHTML = rows;
+
+    $('bp-next').innerHTML = (st.day>=9) ? 'End of season — see your result <i class="ti ti-flag" aria-hidden="true"></i>' : 'Next week <i class="ti ti-arrow-right" aria-hidden="true"></i>';
+    show('bp-ledger');
+  }
+
+  $('bp-next').addEventListener('click', function(){
+    st.day++;
+    if(st.day>=10){ endGame(); } else { startDay(); }
+  });
+
+  function endGame(){
+    var balance = st.cash - st.debt;
+    var tier, color, icon, msg;
+    if(balance >= 15000){
+      tier = 'You are the lucky ~20% who go home with a profit';
+      color = 'var(--color-text-success)'; icon='ti-mood-smile';
+      msg = 'But notice how you made it: mostly thanks to the weeks when berries were abundant and the market price was high — factors you cannot control — not because you worked harder than anyone else. In a bad year for berries or prices, equally hard-working pickers still go home in debt.';
+    } else if(balance >= -15000){
+      tier = 'Roughly broke even — with almost nothing to show';
+      color = 'var(--color-text-warning)'; icon='ti-mood-neutral';
+      msg = '14–15 hours a day, no days off, for 10 weeks straight — in exchange for barely enough to cover the loan you took out to get here. This is what the broker called "earning 100,000 baht."';
+    } else {
+      tier = 'You go home in debt — like roughly 80% of real workers';
+      color = 'var(--color-text-danger)'; icon='ti-mood-sad';
+      msg = 'The broker fees, airfare and on-site deductions add up to more than the berries earned you. You cannot repay the loan, and the farmland you mortgaged is at risk of being seized. This is not because you didn\'t work hard — it is because the system is built so that all the risk falls on the worker.';
+    }
+
+    var html = '';
+    html += '<div style="background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:1.25rem 1.4rem; margin-bottom:14px;">';
+    html += '<div style="font-size:13px; color:var(--color-text-secondary); margin-bottom:4px;">End of the 10-week berry season</div>';
+    html += '<h3 style="margin:0 0 14px; color:'+color+';"><i class="ti '+icon+'" aria-hidden="true"></i> '+tier+'</h3>';
+    html += '<div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">';
+    function card(l,v,c){ return '<div style="flex:1; min-width:120px; background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:10px 12px;"><div style="font-size:12px; color:var(--color-text-secondary);">'+l+'</div><div style="font-size:20px; font-weight:500;'+(c?'color:'+c+';':'')+'">'+v+'</div></div>'; }
+    html += card('Total berries for the season', fmt(st.totalKg)+' kg');
+    html += card('Net berry earnings', fmt(st.cash)+' ฿', st.cash>=0?'var(--color-text-primary)':'var(--color-text-danger)');
+    html += card('Starting debt', fmt(st.debt)+' ฿', 'var(--color-text-danger)');
+    html += card('Final balance', (balance>=0?'+':'−')+fmt(Math.abs(balance))+' ฿', balance>=0?'var(--color-text-success)':'var(--color-text-danger)');
+    html += '</div>';
+    html += '<p style="font-size:15px; line-height:1.7; margin:0;">'+msg+'</p>';
+    html += '</div>';
+
+    html += '<div style="background:var(--color-background-info); border-radius:var(--border-radius-lg); padding:1.1rem 1.3rem; margin-bottom:14px;">';
+    html += '<div style="font-size:14px; font-weight:500; color:var(--color-text-info); margin-bottom:8px;"><i class="ti ti-info-circle" aria-hidden="true"></i> The true story behind this game</div>';
+    html += '<p style="font-size:14px; line-height:1.75; margin:0 0 10px; color:var(--color-text-info);">Over 18 years, around 100,000 Thai farmers — mostly from the northeast — were sent to pick wild berries in Sweden and Finland. About 80% returned home deeper in debt, because of high broker fees and low wages. They worked an average of 14–15.5 hours a day, had their passports confiscated, and had food, housing and vehicle costs deducted from their pay. In 2022 a Finnish court jailed a berry company CEO for human trafficking — the first case of its kind — and ordered compensation to the workers totaling over 22 million baht.</p>';
+    html += '<p style="font-size:13px; margin:0; color:var(--color-text-info);">Sources: <a href="https://prachataienglish.com/node/10693" target="_blank" rel="noopener">Prachatai</a> · <a href="https://yle.fi/a/3-12675884" target="_blank" rel="noopener">Yle</a> · <a href="https://finland.iom.int/stories/false-promises-fresh-start-thai-berry-pickers-find-opportunities-home" target="_blank" rel="noopener">IOM Finland</a></p>';
+    html += '</div>';
+
+    html += '<div style="display:flex; gap:10px; flex-wrap:wrap;">';
+    html += '<button id="bp-replay" style="font-size:15px; padding:10px 18px;"><i class="ti ti-refresh" aria-hidden="true"></i> Play again</button>';
+    html += '</div>';
+
+    $('bp-end').innerHTML = html;
+    show('bp-end');
+    $('bp-replay').addEventListener('click', function(){
+      st = { day:0, debt:DEBT0, cash:0, totalKg:0, dayKg:0 };
+      updateStatus(); startDay();
+    });
+  }
+})();
+</script>
+</body>
+</html>
