@@ -114,7 +114,7 @@ export const siteEn: SiteConfig = {
   available: false,
   availableText: "",
 
-  email: "chanintorn.p@cmu.ac.th",
+  email: "chanintornpens@gmail.com",
   phone: "098-656-5342",
   phoneHref: "tel:+66986565342",
   line: "chaninttt",
@@ -173,6 +173,17 @@ export const siteEn: SiteConfig = {
         keyLabel: "Answer Key",
         keyHref: "/games/ceo2050",
       },
+    },
+    {
+      emoji: "🗳️",
+      title: "Cost of Politics",
+      tagline: "Political Cost Worksheet · 2026",
+      description:
+        "A bilingual worksheet that helps prospective candidates estimate the real cost of running for office — before, during, and after an election — and weigh it against the legal spending cap set by the Election Commission.",
+      tags: ["Politics", "Civic Tool", "Worksheet"],
+      color: "red",
+      link: "/cost-of-politics",
+      cta: "Open the Worksheet",
     },
     {
       emoji: "📒",
@@ -425,6 +436,7 @@ export const siteEn: SiteConfig = {
   ],
 
   orgs: [
+    "Council of Asian Liberals and Democrats (CALD)",
     "Asia-Europe Foundation",
     "FNF Thailand",
     "We Watch",
@@ -492,7 +504,7 @@ export const siteTh: SiteConfig = {
   available: false,
   availableText: "",
 
-  email: "chanintorn.p@cmu.ac.th",
+  email: "chanintornpens@gmail.com",
   phone: "098-656-5342",
   phoneHref: "tel:+66986565342",
   line: "chaninttt",
@@ -551,6 +563,17 @@ export const siteTh: SiteConfig = {
         keyLabel: "เฉลย / Answer Key",
         keyHref: "/games/ceo2050",
       },
+    },
+    {
+      emoji: "🗳️",
+      title: "Cost of Politics",
+      tagline: "สมุดต้นทุนการเมือง · 2026",
+      description:
+        "เวิร์กชีตสองภาษาที่ช่วยผู้สนใจลงสมัครรับเลือกตั้งประเมินต้นทุนจริงในการลงสมัคร ทั้งก่อน ระหว่าง และหลังการเลือกตั้ง พร้อมเทียบกับเพดานค่าใช้จ่ายตามที่ กกต. กำหนด",
+      tags: ["การเมือง", "เครื่องมือพลเมือง", "เวิร์กชีต"],
+      color: "red",
+      link: "/cost-of-politics",
+      cta: "เปิดเวิร์กชีต",
     },
     {
       emoji: "📒",
@@ -803,6 +826,7 @@ export const siteTh: SiteConfig = {
   ],
 
   orgs: [
+    "Council of Asian Liberals and Democrats (CALD)",
     "Asia-Europe Foundation",
     "FNF Thailand",
     "We Watch",
